@@ -1,11 +1,24 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
+from datetime import datetime
+
 
 st.set_page_config(
     page_title='Metamorphosis',
     layout='wide'
 )
+
+def append_to_file(text_to_append):
+    # Get the current timestamp
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Combine timestamp and text
+    entry = f"{text_to_append} {timestamp}\n"
+
+    # Append the entry to the text file
+    with open("log.txt", "a") as file:
+        file.write(entry)
 
 # Initialize session state
 if 'cookie_agreement' not in st.session_state:
@@ -47,6 +60,9 @@ if st.session_state['cookie_agreement']:
             # Calculate total score
             total_score = sum(point_values[ranking] for ranking in user_rankings.values())
 
+            text_to_append = "Home Page - Submit Rankings submit at"
+            append_to_file(text_to_append)
+
             # Display user rankings and total score
             st.success("Rankings Submitted!")
             st.write("User Rankings:")
@@ -71,3 +87,5 @@ else:
         if st.button("I agree to the cookie policy"):
             st.session_state['cookie_agreement'] = True
             st.experimental_rerun()
+            text_to_append = "Cookie Policy hit at"
+            append_to_file(text_to_append)

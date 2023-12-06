@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+from home_page import append_to_file
 
 # Function to save entry to CSV
 def save_to_csv(title, date, text):
@@ -46,10 +47,14 @@ def main():
     if st.button("Save Entry"):
         save_to_csv(title, date, text)
         st.success("Entry saved successfully!")
+        text_to_append = "Journal - Save Entry at"
+        append_to_file(text_to_append)
 
     # View Entries button
     if st.button("View Entries", key='view_entries'):
         st.header("Journal Entries")
+        text_to_append = "Journal - View Entries at"
+        append_to_file(text_to_append)
 
         # Read CSV and filter entries
         if os.path.exists('journal_entries.csv'):
