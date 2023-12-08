@@ -77,7 +77,9 @@ def main():
             # Display filtered entries
             for index, row in filtered_df.iterrows():
                 st.subheader(f"Title: {row['Title']}")
-                st.write(f"Date: {row['Date'].strftime('%Y-%m-%d')}")
+                # Check for NaT values before formatting the date
+                date_display = row['Date'].strftime('%Y-%m-%d') if pd.notna(row['Date']) else 'Unknown Date'
+                st.write(f"Date: {date_display}")
                 st.write(row['Text'])
                 st.markdown("---")
         else:
