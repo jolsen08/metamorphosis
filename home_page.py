@@ -48,6 +48,8 @@ if not st.session_state['cookie_agreement']:
         st.title("Cookie Policy Agreement")
         st.write("We use cookies to improve your experience on our site. Please agree to our cookie policy to continue.")
         if st.button("I agree to the cookie policy"):
+            text_to_append = "Privacy Policy Chosen at"
+            append_to_file(text_to_append)
             st.session_state['cookie_agreement'] = True
             st.experimental_rerun()
 else:
@@ -77,6 +79,8 @@ else:
             )
 
         if st.button("Submit Rankings"):
+            text_to_append = "Home Page - Rankings submit at"
+            append_to_file(text_to_append)
             total_score = sum(point_values[ranking] for ranking in user_rankings.values())
             today_date = pd.to_datetime("today").strftime("%b %d, %Y")
             existing_index = scores_df[scores_df['Date'] == today_date].index

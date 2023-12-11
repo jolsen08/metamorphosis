@@ -57,6 +57,8 @@ def main():
     date = st.date_input("Date:")
     text = st.text_area("Journal Entry:", height=200)
     if st.button("Save Entry"):
+        text_to_append = "Journal - Submit entry at"
+        append_to_file(text_to_append)
         save_to_csv(title, date, text)
         st.success("Entry saved successfully!")
         text_to_append = "Journal - Save Entry at"
@@ -64,6 +66,8 @@ def main():
 
     # View Entries button
     if st.button("View Entries", key='view_entries'):
+        text_to_append = "Journal - View entries at"
+        append_to_file(text_to_append)
         st.header("Journal Entries")
         text_to_append = "Journal - View Entries at"
         append_to_file(text_to_append)
