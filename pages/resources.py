@@ -1,5 +1,6 @@
 import streamlit as st
 import base64
+import smtplib
 
 
 st.set_page_config(
@@ -27,7 +28,24 @@ with form_space.form("Stress Level"):
             st.session_state.suicide_question = suicide_question
             st.rerun()
     elif st.session_state.suicide_question == 'Yes':
-        st.subheader("Please call or text 988 (the suicide hotline)!")
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        sender_email = 'metamissionary.health@gmail.com'
+        server.login(sender_email, 'qaia vwbf dpku sgbx')
+        receiver_email = 'president.lebron.james@gmail.com'
+        message = f'''Subject: Missionary Mental Health Alert
+
+Dear President James,
+
+Elder James Butler recently reported high stress levels and indicated suicidal thoughts or urgent attention. His email is james.butler@missionary.org and he is currently serving in the Blue Lagoon Ward in the Miami Florida Stake.
+
+Thank you,
+MetaMissionary Health
+'''
+        server.sendmail(sender_email, receiver_email, message)
+        server.quit()
+
+        st.subheader("Your Mission President has been alerted. Please call or text 988 (the suicide hotline)!")
         submit = st.form_submit_button("OK")
         if submit:
             session_state = st.session_state
