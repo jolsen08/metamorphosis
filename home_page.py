@@ -86,13 +86,20 @@ else:
             existing_index = scores_df[scores_df['Date'] == today_date].index
 
             if not existing_index.empty:
-                overwrite_score = st.confirm(f"You have already submitted a score for {today_date}. Do you want to overwrite it?")
+                if 'submitted' in globals():
+                    submitted.empty()
+                else:
+                    submitted = st.empty()
+                st.session_state.editted = True
+                st.warning(f"You have already submitted a score for {today_date}. Do you want to overwrite it?")
+                overwrite_score = st.button("Yes")
                 if overwrite_score:
                     scores_df.loc[existing_index, 'Total_Score'] = total_score
+                    st.rerun()
             else:
                 new_score_entry = pd.DataFrame({'Date': [today_date], 'Total_Score': [total_score]})
                 scores_df = pd.concat([scores_df, new_score_entry], ignore_index=True)
-
+                
             st.session_state.user_scores = scores_df
 
             updated_chart = alt.Chart(scores_df).mark_line().encode(
@@ -101,5 +108,12 @@ else:
             ).properties(width=800, height=400).interactive()
 
             chart.altair_chart(updated_chart)
-            st.success("Rankings Submitted")
+
+            if 'submitted' in globals():
+                if 'editted' not in st.session_state:
+                    submitted.success("Rankings Submitted")
+            else:
+                submitted = st.empty()
+                if 'editted' not in st.session_state:
+                    submitted.success("Rankings Submitted")
 
