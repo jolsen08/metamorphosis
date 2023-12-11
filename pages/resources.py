@@ -1,7 +1,7 @@
 import streamlit as st
 import base64
 import smtplib
-
+from home_page import append_to_file
 
 st.set_page_config(
     page_title='Metamorphosis | Resources',
@@ -17,6 +17,9 @@ with form_space.form("Stress Level"):
         stress_level = st.selectbox("Please select a Stress Level",[1,2,3,4,5])
         submit = st.form_submit_button("Next")
         if submit:
+            #append to text file upon click
+            text_to_append = "Resources - Stress Level Submission at"
+            append_to_file(text_to_append)
             if stress_level < 4:
                 st.session_state.suicide_question = 'No'
             st.session_state.stress_level = stress_level
@@ -25,6 +28,9 @@ with form_space.form("Stress Level"):
         suicide_question = st.selectbox("Are you struggling with suicidal thoughts or other thoughts that require immediate attention?",['Yes','No'])
         submit = st.form_submit_button("Next")
         if submit:
+            #append to text file upon click
+            text_to_append = "Resources - suicide question at"
+            append_to_file(text_to_append)
             st.session_state.suicide_question = suicide_question
             st.rerun()
     elif st.session_state.suicide_question == 'Yes':
@@ -48,6 +54,9 @@ MetaMissionary Health
         st.subheader("Your Mission President has been alerted. Please call or text 988 (the suicide hotline)!")
         submit = st.form_submit_button("OK")
         if submit:
+            #append to text file upon click
+            text_to_append = "Resources - OK button if clicked yes for suicidal thoughts at"
+            append_to_file(text_to_append)
             session_state = st.session_state
             for key in list(session_state.keys()):
                 del session_state[key]
@@ -57,6 +66,9 @@ MetaMissionary Health
         stress_causer = st.multiselect("Where is most of your stress coming from?",['Physical Demands','Emotional Demands','Social Demands','Intellectual Demands','Spiritual Demands'])
         submit = st.form_submit_button("Next")
         if submit:
+            #append to text file upon click
+            text_to_append = "Resources - Where stress is coming from button at"
+            append_to_file(text_to_append)
             st.session_state.stress_causer = stress_causer
             st.rerun()
     else:
@@ -90,6 +102,9 @@ MetaMissionary Health
 
         submit = st.form_submit_button("Start Over")
         if submit:
+            #append to text file upon click
+            text_to_append = "Resources - Start Over"
+            append_to_file(text_to_append)
             session_state = st.session_state
             for key in list(session_state.keys()):
                 del session_state[key]
