@@ -1,7 +1,7 @@
 import streamlit as st
 import base64
 import smtplib
-from home_page import append_to_file
+# from home_page import append_to_file
 
 st.set_page_config(
     page_title='Metamorphosis | Resources',
@@ -14,12 +14,27 @@ form_space = st.empty()
 
 with form_space.form("Stress Level"):
     if 'stress_level' not in st.session_state:
-        stress_level = st.selectbox("Please select a Stress Level",[1,2,3,4,5])
+        if 'user_scores' not in st.session_state:
+            stress_level = st.selectbox("Please select a Stress Level",[1,2,3,4,5])
+        else:
+            score_df = st.session_state.user_scores
+            last_row = score_df.iloc[-1].to_dict()
+            st.write(f"Your mental health score is {last_row['Total_Score']} based on your last screening submission, submitted on {last_row['Date']}")
+            if last_row['Total_Score'] <= 9.6:
+                stress_level = 1
+            elif last_row['Total_Score'] <= 19.2:
+                stress_level = 2
+            elif last_row['Total_Score'] <= 28.8:
+                stress_level = 3
+            elif last_row['Total_Score'] <= 38.4:
+                stress_level = 4
+            else:
+                stress_level = 5
         submit = st.form_submit_button("Next")
         if submit:
             #append to text file upon click
             text_to_append = "Resources - Stress Level Submission at"
-            append_to_file(text_to_append)
+            # append_to_file(text_to_append)
             if stress_level < 4:
                 st.session_state.suicide_question = 'No'
             st.session_state.stress_level = stress_level
@@ -30,7 +45,7 @@ with form_space.form("Stress Level"):
         if submit:
             #append to text file upon click
             text_to_append = "Resources - suicide question at"
-            append_to_file(text_to_append)
+            # append_to_file(text_to_append)
             st.session_state.suicide_question = suicide_question
             st.rerun()
     elif st.session_state.suicide_question == 'Yes':
@@ -56,7 +71,7 @@ MetaMissionary Health
         if submit:
             #append to text file upon click
             text_to_append = "Resources - OK button if clicked yes for suicidal thoughts at"
-            append_to_file(text_to_append)
+            # append_to_file(text_to_append)
             session_state = st.session_state
             for key in list(session_state.keys()):
                 del session_state[key]
@@ -68,7 +83,7 @@ MetaMissionary Health
         if submit:
             #append to text file upon click
             text_to_append = "Resources - Where stress is coming from button at"
-            append_to_file(text_to_append)
+            # append_to_file(text_to_append)
             st.session_state.stress_causer = stress_causer
             st.rerun()
     else:
@@ -104,9 +119,10 @@ MetaMissionary Health
         if submit:
             #append to text file upon click
             text_to_append = "Resources - Start Over"
-            append_to_file(text_to_append)
+            # append_to_file(text_to_append)
             session_state = st.session_state
             for key in list(session_state.keys()):
-                del session_state[key]
+                if key != 'user_scores':
+                    del session_state[key]
 
             st.rerun()
